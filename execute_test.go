@@ -9,7 +9,7 @@ import (
 
 // TestDoForLoginSuccess This test case tests the successful login scenario
 func TestDoForLoginSuccess(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.LoginRequest{
 		Email:    "user@hitokoto.cn",
@@ -27,7 +27,7 @@ func TestDoForLoginSuccess(t *testing.T) {
 
 // TestDoForLoginFailed This test case tests the failed login scenario
 func TestDoForLoginFailed(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.LoginRequest{
 		Email:    "user@hitokoto.cn",
@@ -49,7 +49,7 @@ func TestDoForLoginFailed(t *testing.T) {
 
 // TestDoForLoginSuccess This test case tests the successful register scenario
 func TestDoForRegisterSuccess(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.RegisterRequest{
 		Name:     "皮皮喵",
@@ -72,7 +72,7 @@ func TestDoForRegisterSuccess(t *testing.T) {
 
 // TestDoForRegisterFailed This test case tests the failed register scenario
 func TestDoForRegisterFailed(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.RegisterRequest{
 		Name:     "皮皮喵",
@@ -95,7 +95,7 @@ func TestDoForRegisterFailed(t *testing.T) {
 
 // TestDoForPasswordResetSuccess This test case tests the successful password reset scenario
 func TestDoForPasswordResetSuccess(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.PasswordResetRequest{
 		Email: "pipi@hitokoto.cn",
@@ -117,13 +117,57 @@ func TestDoForPasswordResetSuccess(t *testing.T) {
 
 // TestDoForPasswordResetFailed This test case tests the failed password reset scenario
 func TestDoForPasswordResetFailed(t *testing.T) {
-	e := NewExecutor("token")
+	e := NewExecutor()
 
 	req := &op.PasswordResetRequest{
 		Email: "xxxxxxx@hitokoto.cn",
 	}
 	resp := &op.PasswordResetResponse{}
 	err := e.Do(&constants.APIPasswordReset, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserSuccess This test case tests the successful user scenario
+func TestDoForUserSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.UserResponse{}
+	err := e.Do(&constants.APIUser, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserFailed This test case tests the failed user scenario
+func TestDoForUserFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserResponse{}
+	err := e.Do(&constants.APIUser, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {

@@ -14,7 +14,7 @@ type Executor struct {
 	UserAgent  string
 }
 
-func NewExecutor(token string) *Executor {
+func NewExecutor() *Executor {
 	return &Executor{
 		APIGateway: constants.Scheme + constants.APIGatewayV1,
 	}
