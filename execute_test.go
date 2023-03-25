@@ -224,3 +224,47 @@ func TestDoForUserTokenFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserRefreshTokenSuccess This test case tests the successful refresh user token scenario
+func TestDoForUserTokenRefreshSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserTokenRefreshRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserTokenRefreshResponse{}
+	err := e.Do(&constants.APIUserTokenRefresh, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserTokenRefreshFailed This test case tests the failed refresh user token scenario
+func TestDoForUserTokenRefreshFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserTokenRefreshRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserTokenRefreshResponse{}
+	err := e.Do(&constants.APIUserTokenRefresh, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
