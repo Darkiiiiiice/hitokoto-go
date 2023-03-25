@@ -3,8 +3,10 @@ package constants
 import "net/http"
 
 const (
-	Scheme       = "https://"                   // Scheme is the scheme of the API
-	APIGatewayV1 = "hitokoto.cn/api/restful/v1" // APIGatewayV1 is the API gateway of v1
+	Scheme       = "https://" // Scheme is the scheme of the API
+	Host         = "hitokoto.cn"
+	APIGatewayV1 = Host + "/api/restful/v1" // APIGatewayV1 is the API gateway of v1
+	UserAgent    = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"
 )
 
 var (
