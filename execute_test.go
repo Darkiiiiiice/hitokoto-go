@@ -1,7 +1,6 @@
 package hitokoto
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/mariomang/hitokoto/constants"
@@ -24,8 +23,6 @@ func TestDoForLoginSuccess(t *testing.T) {
 	if resp.ID != 11628 {
 		t.Errorf("ID is not correct: %v", resp.ID)
 	}
-
-	fmt.Printf("resp: %v", resp)
 }
 
 // TestDoForLoginFailed This test case tests the failed login scenario
@@ -48,8 +45,6 @@ func TestDoForLoginFailed(t *testing.T) {
 			t.Errorf("Status is not correct: %v", e.Status)
 		}
 	}
-
-	fmt.Printf("resp: %v", resp)
 }
 
 // TestDoForLoginSuccess This test case tests the successful register scenario
@@ -73,10 +68,9 @@ func TestDoForRegisterSuccess(t *testing.T) {
 			t.Errorf("Status is not correct: %v", e.Status)
 		}
 	}
-
 }
 
-// TestDoForLoginFailed This test case tests the failed register scenario
+// TestDoForRegisterFailed This test case tests the failed register scenario
 func TestDoForRegisterFailed(t *testing.T) {
 	e := NewExecutor("token")
 
@@ -97,6 +91,48 @@ func TestDoForRegisterFailed(t *testing.T) {
 			t.Errorf("Status is not correct: %v", e.Status)
 		}
 	}
+}
 
-	fmt.Printf("resp: %v", resp)
+// TestDoForPasswordResetSuccess This test case tests the successful password reset scenario
+func TestDoForPasswordResetSuccess(t *testing.T) {
+	e := NewExecutor("token")
+
+	req := &op.PasswordResetRequest{
+		Email: "pipi@hitokoto.cn",
+	}
+	resp := &op.PasswordResetResponse{}
+	err := e.Do(&constants.APIPasswordReset, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForPasswordResetFailed This test case tests the failed password reset scenario
+func TestDoForPasswordResetFailed(t *testing.T) {
+	e := NewExecutor("token")
+
+	req := &op.PasswordResetRequest{
+		Email: "xxxxxxx@hitokoto.cn",
+	}
+	resp := &op.PasswordResetResponse{}
+	err := e.Do(&constants.APIPasswordReset, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
 }
