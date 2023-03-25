@@ -112,3 +112,42 @@ func (r *UserTokenResponse) Parse(data []byte) error {
 
 	return nil
 }
+
+type UserTokenRefreshRequest struct {
+	Token string
+}
+
+func (r *UserTokenRefreshRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	return values
+}
+
+type UserTokenRefreshResponse struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Token string `json:"token"`
+}
+
+func (r *UserTokenRefreshResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		d := list[0].Get("user")
+		r.ID = d.GetInt("id")
+		r.Name = string(d.GetStringBytes("name"))
+		r.Email = string(d.GetStringBytes("email"))
+		r.Token = string(d.GetStringBytes("token"))
+	}
+
+	return nil
+}
