@@ -180,3 +180,47 @@ func TestDoForUserFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserTokenSuccess This test case tests the successful get user token scenario
+func TestDoForUserTokenSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserTokenRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserTokenResponse{}
+	err := e.Do(&constants.APIUserToken, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserTokenFailed This test case tests the failed get user token scenario
+func TestDoForUserTokenFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserTokenRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserTokenResponse{}
+	err := e.Do(&constants.APIUserToken, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
