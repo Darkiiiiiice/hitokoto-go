@@ -3,13 +3,21 @@ package op
 import (
 	"net/url"
 
-	"github.com/mariomang/hitokoto/constants"
 	"github.com/valyala/fastjson"
 )
 
 type LoginRequest struct {
 	Email    string
 	Password string
+}
+
+func (lr *LoginRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("email", lr.Email)
+	values.Add("password", lr.Password)
+
+	return values
 }
 
 type LoginResponse struct {
@@ -26,37 +34,30 @@ type LoginResponse struct {
 	Token           string `json:"token"`
 }
 
-type LoginCommand struct {
-	Request  *LoginRequest
-	Response *LoginResponse
-	Api      constants.API
-}
-
-func NewLoginCommand(req *LoginRequest) *LoginCommand {
-	return &LoginCommand{
-		Request: req,
-		Api:     constants.APILogin,
-	}
-}
-
-func (lc *LoginCommand) Values() url.Values {
-	var values = url.Values{}
-
-	if lc.Request == nil {
-		return values
+func (lr *LoginResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
 	}
 
-	values.Add("email", lc.Request.Email)
-	values.Add("password", lc.Request.Password)
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		d := list[0]
+		lr.ID = d.GetInt("id")
+		lr.Name = string(d.GetStringBytes("name"))
+		lr.Email = string(d.GetStringBytes("email"))
+		lr.IsSuspended = d.GetInt("is_suspended")
+		lr.IsAdmin = d.GetInt("is_admin")
+		lr.IsReviewer = d.GetInt("is_reviewer")
+		lr.EmailVerifiedAt = string(d.GetStringBytes("email_verified_at"))
+		lr.CreatedFrom = string(d.GetStringBytes("created_from"))
+		lr.CreatedAt = string(d.GetStringBytes("created_at"))
+		lr.UpdatedAt = string(d.GetStringBytes("updated_at"))
+		lr.Token = string(d.GetStringBytes("token"))
+	}
 
-	return values
-}
-
-func (lc *LoginCommand) Parse(data []byte) error {
-	fastjson.Parse(string(data))
 	return nil
-}
-
-func (lc *LoginCommand) API() *constants.API {
-	return &lc.Api
 }

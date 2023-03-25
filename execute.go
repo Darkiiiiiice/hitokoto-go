@@ -5,30 +5,32 @@ import (
 	"strings"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mariomang/hitokoto/op"
+	"github.com/mariomang/hitokoto/constants"
+	"github.com/valyala/fastjson"
 )
 
 type Executor struct {
 	APIGateway string
-	Token      string
 }
 
-func (e *Executor) Do(command op.Command) (err error) {
+func NewExecutor(token string) *Executor {
+	return &Executor{
+		APIGateway: constants.Scheme + constants.APIGatewayV1,
+	}
+}
+
+func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error) {
 
 	// Create a Resty Client
 	client := resty.New()
 
-	var api = command.API()
-	var values = command.Values()
-	if api.Auth {
-		values.Add("token", e.Token)
-	}
+	var values = req.FormatToValues()
 
-	var path = api.Api
+	var path = e.APIGateway + api.Api
 	if api.PathVar != "" {
 		var pathVar = values.Get(api.PathVar)
 		values.Del(api.PathVar)
-		path = strings.ReplaceAll(path, ":"+api.PathVar, pathVar)
+		path = strings.ReplaceAll(path, api.PathVar, pathVar)
 	}
 
 	var request = client.R().
@@ -55,7 +57,19 @@ func (e *Executor) Do(command op.Command) (err error) {
 	default:
 	}
 
-	if err := command.Parse(body); err != nil {
+	v, err := fastjson.ParseBytes(body)
+	if err != nil {
+		return err
+	}
+
+	var status = v.GetInt("status")
+	if status != 200 {
+		return NewHitokotoError(status, string(v.GetStringBytes("message")), v.GetInt64("ts"))
+	}
+
+	var buf = v.Get("data").MarshalTo(nil)
+
+	if err := resp.Parse(buf); err != nil {
 		return err
 	}
 
