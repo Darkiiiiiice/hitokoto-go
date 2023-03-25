@@ -2,6 +2,7 @@ package op
 
 import (
 	"net/url"
+	"time"
 
 	"github.com/valyala/fastjson"
 )
@@ -21,17 +22,18 @@ func (lr *LoginRequest) FormatToValues() url.Values {
 }
 
 type LoginResponse struct {
-	ID              int    `json:"id"`
-	Name            string `json:"name"`
-	Email           string `json:"email"`
-	IsSuspended     int    `json:"is_suspended"`
-	IsAdmin         int    `json:"is_admin"`
-	IsReviewer      int    `json:"is_reviewer"`
-	EmailVerifiedAt string `json:"email_verified_at"`
-	CreatedFrom     string `json:"created_from"`
-	CreatedAt       string `json:"created_at"`
-	UpdatedAt       string `json:"updated_at"`
-	Token           string `json:"token"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Email       string `json:"email"`
+	IsSuspended int    `json:"is_suspended"`
+	IsAdmin     int    `json:"is_admin"`
+	IsReviewer  int    `json:"is_reviewer"`
+	CreatedFrom string `json:"created_from"`
+	Token       string `json:"token"`
+
+	UpdatedAt       time.Time `json:"updated_at"`
+	CreatedAt       time.Time `json:"created_at"`
+	EmailVerifiedAt time.Time `json:"email_verified_at"`
 }
 
 func (lr *LoginResponse) Parse(data []byte) error {
@@ -52,11 +54,27 @@ func (lr *LoginResponse) Parse(data []byte) error {
 		lr.IsSuspended = d.GetInt("is_suspended")
 		lr.IsAdmin = d.GetInt("is_admin")
 		lr.IsReviewer = d.GetInt("is_reviewer")
-		lr.EmailVerifiedAt = string(d.GetStringBytes("email_verified_at"))
 		lr.CreatedFrom = string(d.GetStringBytes("created_from"))
-		lr.CreatedAt = string(d.GetStringBytes("created_at"))
-		lr.UpdatedAt = string(d.GetStringBytes("updated_at"))
 		lr.Token = string(d.GetStringBytes("token"))
+
+		emailVerifiedAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("email_verified_at")))
+		if err != nil {
+			emailVerifiedAt = time.Time{}
+		}
+		lr.EmailVerifiedAt = emailVerifiedAt
+
+		creatAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("created_at")))
+		if err != nil {
+			creatAt = time.Time{}
+		}
+		lr.CreatedAt = creatAt
+
+		updatedAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("updated_at")))
+		if err != nil {
+			updatedAt = time.Time{}
+		}
+		lr.UpdatedAt = updatedAt
+
 	}
 
 	return nil

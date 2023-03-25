@@ -44,7 +44,56 @@ func TestDoForLoginFailed(t *testing.T) {
 			t.Errorf("Error executing request: %v", err)
 		}
 
-		if e.Status != -1 {
+		if e.Status != -1 || e.Status == 400 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+	fmt.Printf("resp: %v", resp)
+}
+
+// TestDoForLoginSuccess This test case tests the successful register scenario
+func TestDoForRegisterSuccess(t *testing.T) {
+	e := NewExecutor("token")
+
+	req := &op.RegisterRequest{
+		Name:     "皮皮喵",
+		Email:    "pipi@hitokoto.cn",
+		Password: "gugugu",
+	}
+	resp := &op.RegisterResponse{}
+	err := e.Do(&constants.APIRegister, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != -1 && e.Status != -2 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForLoginFailed This test case tests the failed register scenario
+func TestDoForRegisterFailed(t *testing.T) {
+	e := NewExecutor("token")
+
+	req := &op.RegisterRequest{
+		Name:     "皮皮喵",
+		Email:    "pipi@hitokoto.cn",
+		Password: "gugugu",
+	}
+	resp := &op.RegisterResponse{}
+	err := e.Do(&constants.APIRegister, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
 			t.Errorf("Status is not correct: %v", e.Status)
 		}
 	}

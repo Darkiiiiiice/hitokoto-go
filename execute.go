@@ -11,12 +11,18 @@ import (
 
 type Executor struct {
 	APIGateway string
+	UserAgent  string
 }
 
 func NewExecutor(token string) *Executor {
 	return &Executor{
 		APIGateway: constants.Scheme + constants.APIGatewayV1,
 	}
+}
+
+func (e *Executor) WithUserAgent(userAgent string) *Executor {
+	e.UserAgent = userAgent
+	return e
 }
 
 func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error) {
@@ -33,9 +39,16 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 		path = strings.ReplaceAll(path, api.PathVar, pathVar)
 	}
 
+	var userAgent = constants.UserAgent
+	if userAgent != "" {
+		userAgent = e.UserAgent
+	}
+
 	var request = client.R().
 		SetQueryParamsFromValues(values).
-		SetHeader("Content-Type", api.ContentType)
+		SetHeader("Content-Type", api.ContentType).
+		SetHeader("Host", constants.Host).
+		SetHeader("User-Agent", userAgent)
 
 	var body []byte
 	switch api.Method {
