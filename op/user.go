@@ -180,6 +180,8 @@ func (r *UserPasswordRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
+	values.Add("password", r.Password)
+	values.Add("new_password", r.NewPassword)
 	return values
 }
 
@@ -187,5 +189,27 @@ type UserPasswordResponse struct {
 }
 
 func (r *UserPasswordResponse) Parse(data []byte) error {
+	return nil
+}
+
+type UserEmailRequest struct {
+	Token    string
+	Password string
+	Email    string
+}
+
+func (r *UserEmailRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	values.Add("password", r.Password)
+	values.Add("email", r.Email)
+	return values
+}
+
+type UserEmailResponse struct {
+}
+
+func (r *UserEmailResponse) Parse(data []byte) error {
 	return nil
 }

@@ -360,3 +360,51 @@ func TestDoForUserPasswordFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserEmailSuccess This test case tests the successful modify user email scenario
+func TestDoForUserEmailSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailRequest{
+		Token:    "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Password: "guguguguguggugu",
+		Email:    "i@freejishu.com",
+	}
+	resp := &op.UserEmailResponse{}
+	err := e.Do(&constants.APIUserEmail, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserEmailFailed This test case tests the failed modify user email scenario
+func TestDoForUserEmailFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailRequest{
+		Token:    "xxxxxx",
+		Password: "guguguguguggugu",
+		Email:    "i@freejishu.com",
+	}
+	resp := &op.UserEmailResponse{}
+	err := e.Do(&constants.APIUserEmail, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
