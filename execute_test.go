@@ -912,3 +912,47 @@ func TestDoForLikeCancelFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForMarkSuccess This test case tests the successful mark scenario
+func TestDoForMarkSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.MarkRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.MarkResponse{}
+	err := e.Do(&constants.APIMark, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoMarkFailed This test case tests the failed mark scenario
+func TestDoForMarkFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.MarkRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.MarkResponse{}
+	err := e.Do(&constants.APIMark, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
