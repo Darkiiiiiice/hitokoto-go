@@ -692,7 +692,7 @@ func TestDoForUserHitokotoHistoryRefuseSuccess(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.UserHitokotoHistoryRefuseRequest{
-		Token:  "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		Token:  "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
 		Offset: 0,
 		Limit:  20,
 	}
@@ -720,6 +720,52 @@ func TestDoForUserHitokotoHistoryRefuseFailed(t *testing.T) {
 	}
 	resp := &op.UserHitokotoHistoryRefuseResponse{}
 	err := e.Do(&constants.APIUserHitokotoHistoryRefuse, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoHistoryAcceptSuccess This test case tests the successful user hitokoto history accept scenario
+func TestDoForUserHitokotoHistoryAcceptSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryAcceptRequest{
+		Token:  "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Offset: 0,
+		Limit:  20,
+	}
+	resp := &op.UserHitokotoHistoryAcceptResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistoryAccept, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoHistoryAcceptFailed This test case tests the failed user hitokoto history accept scenario
+func TestDoForUserHitokotoHistoryAcceptFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryAcceptRequest{
+		Token: "xxxx",
+	}
+	resp := &op.UserHitokotoHistoryAcceptResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistoryAccept, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
