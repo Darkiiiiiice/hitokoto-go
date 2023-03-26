@@ -778,3 +778,47 @@ func TestDoForUserHitokotoHistoryAcceptFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForLikeSuccess This test case tests the successful like scenario
+func TestDoForLikeSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikeRequest{
+		SentenceUuid: "34662c58-8eba-4757-a637-c7c11e9f537e",
+	}
+	resp := &op.LikeResponse{}
+	err := e.Do(&constants.APILikeGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForLikeFailed This test case tests the failed like scenario
+func TestDoForLikeFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikeRequest{
+		SentenceUuid: "xxxxxx",
+	}
+	resp := &op.LikeResponse{}
+	err := e.Do(&constants.APILikeGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
