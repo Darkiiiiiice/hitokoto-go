@@ -268,3 +268,237 @@ func TestDoForUserTokenRefreshFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserEmailVerifySuccess This test case tests the successful verify user email scenario
+func TestDoForUserEmailVerifySuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailVerifyRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserEmailVerifyResponse{}
+	err := e.Do(&constants.APIUserEmailVerify, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserEmailVerifyFailed This test case tests the failed verify user email scenario
+func TestDoForUserEmailVerifyFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailVerifyRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserEmailVerifyResponse{}
+	err := e.Do(&constants.APIUserEmailVerify, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserPasswordSuccess This test case tests the successful modify user password scenario
+func TestDoForUserPasswordSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserPasswordRequest{
+		Token:       "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Password:    "gugugu",
+		NewPassword: "gugugu!!!",
+	}
+	resp := &op.UserPasswordResponse{}
+	err := e.Do(&constants.APIUserPassword, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserPasswordFailed This test case tests the failed modify user password scenario
+func TestDoForUserPasswordFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserPasswordRequest{
+		Token:       "xxxxxxx",
+		Password:    "gugugu",
+		NewPassword: "gugugu!!!",
+	}
+	resp := &op.UserPasswordResponse{}
+	err := e.Do(&constants.APIUserPassword, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserEmailSuccess This test case tests the successful modify user email scenario
+func TestDoForUserEmailSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailRequest{
+		Token:    "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Password: "guguguguguggugu",
+		Email:    "i@freejishu.com",
+	}
+	resp := &op.UserEmailResponse{}
+	err := e.Do(&constants.APIUserEmail, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserEmailFailed This test case tests the failed modify user email scenario
+func TestDoForUserEmailFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailRequest{
+		Token:    "xxxxxx",
+		Password: "guguguguguggugu",
+		Email:    "i@freejishu.com",
+	}
+	resp := &op.UserEmailResponse{}
+	err := e.Do(&constants.APIUserEmail, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsGetSuccess This test case tests the successful get user notification setttings scenario
+func TestDoForUserNotificationSettingsGetSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsGetRequest{
+		Token: "dMPAUy3HstBHsuIJhmyzMwAYrlUS47FYlwFe1mBD",
+	}
+	resp := &op.UserNotificationSettingsGetResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsGetFailed This test case tests the failed get user notification setttings scenario
+func TestDoForUserNotificationSettingsGetFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsGetRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserNotificationSettingsGetResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsPutSuccess This test case tests the successful modify user notification setttings scenario
+func TestDoForUserNotificationSettingsPutSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsPutRequest{
+		Token:                 "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		EmailGlobal:           true,
+		EmailHitokotoAppended: true,
+		EmailHitokotoReviewed: true,
+		EmailPollCreated:      true,
+		EmailPollResult:       false,
+		EmailPollReportDaily:  true,
+	}
+	resp := &op.UserNotificationSettingsPutResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsPut, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsPutFailed This test case tests the failed modify user notification setttings scenario
+func TestDoForUserNotificationSettingsPutFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsPutRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserNotificationSettingsPutResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsPut, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
