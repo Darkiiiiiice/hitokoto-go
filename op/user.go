@@ -169,3 +169,23 @@ type UserEmailVerifyResponse struct {
 func (r *UserEmailVerifyResponse) Parse(data []byte) error {
 	return nil
 }
+
+type UserPasswordRequest struct {
+	Token       string
+	Password    string
+	NewPassword string
+}
+
+func (r *UserPasswordRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	return values
+}
+
+type UserPasswordResponse struct {
+}
+
+func (r *UserPasswordResponse) Parse(data []byte) error {
+	return nil
+}

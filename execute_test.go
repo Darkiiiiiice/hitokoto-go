@@ -291,7 +291,7 @@ func TestDoForUserEmailVerifySuccess(t *testing.T) {
 
 }
 
-// TestDoForUserEmailVerifyFailed This test case tests the failed refresh user token scenario
+// TestDoForUserEmailVerifyFailed This test case tests the failed verify user email scenario
 func TestDoForUserEmailVerifyFailed(t *testing.T) {
 	e := NewExecutor()
 
@@ -300,6 +300,54 @@ func TestDoForUserEmailVerifyFailed(t *testing.T) {
 	}
 	resp := &op.UserEmailVerifyResponse{}
 	err := e.Do(&constants.APIUserEmailVerify, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserPasswordSuccess This test case tests the successful modify user password scenario
+func TestDoForUserPasswordSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserPasswordRequest{
+		Token:       "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Password:    "gugugu",
+		NewPassword: "gugugu!!!",
+	}
+	resp := &op.UserPasswordResponse{}
+	err := e.Do(&constants.APIUserPassword, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserPasswordFailed This test case tests the failed modify user password scenario
+func TestDoForUserPasswordFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserPasswordRequest{
+		Token:       "xxxxxxx",
+		Password:    "gugugu",
+		NewPassword: "gugugu!!!",
+	}
+	resp := &op.UserPasswordResponse{}
+	err := e.Do(&constants.APIUserPassword, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
