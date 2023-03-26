@@ -1147,8 +1147,8 @@ func TestDoForHitokotoScoreGetSuccess(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.HitokotoScoreGetRequest{
-		Token:   "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
-		UUID:    "0348752c-6bb6-43c2-8a6d-a4c780e04767",
+		Token: "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		UUID:  "0348752c-6bb6-43c2-8a6d-a4c780e04767",
 	}
 	resp := &op.HitokotoScoreGetResponse{}
 	err := e.Do(&constants.APIHitokotoScoreGet, req, resp)
@@ -1174,6 +1174,52 @@ func TestDoForHitokotoScoreGetFailed(t *testing.T) {
 	}
 	resp := &op.HitokotoScoreGetResponse{}
 	err := e.Do(&constants.APIHitokotoScoreGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForHitokotoReportSuccess This test case tests the successful report hitokoto scenario
+func TestDoForHitokotoReportSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoReportRequest{
+		Token:   "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		UUID:    "0348752c-6bb6-43c2-8a6d-a4c780e04767",
+		Comment: "这个句子真棒！",
+	}
+	resp := &op.HitokotoReportResponse{}
+	err := e.Do(&constants.APIHitokotoReport, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoHitokotoReportFailed This test case tests the failed report hitokoto scenario
+func TestDoForHitokotoReportFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoReportRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.HitokotoReportResponse{}
+	err := e.Do(&constants.APIHitokotoReport, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {

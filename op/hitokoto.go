@@ -84,7 +84,7 @@ func (r *HitokotoUUIDRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
-	values.Add(":uuid", r.UUID)
+	values.Add("uuid", r.UUID)
 
 	return values
 }
@@ -147,7 +147,7 @@ func (r *HitokotoUUIDMarkRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
-	values.Add(":uuid", r.UUID)
+	values.Add("uuid", r.UUID)
 
 	return values
 }
@@ -196,7 +196,7 @@ func (r *HitokotoScorePostRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
-	values.Add(":uuid", r.UUID)
+	values.Add("uuid", r.UUID)
 	values.Add("score", strconv.Itoa(r.Score))
 	values.Add("comment", r.Comment)
 
@@ -257,7 +257,7 @@ func (r *HitokotoScoreGetRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
-	values.Add(":uuid", r.UUID)
+	values.Add("uuid", r.UUID)
 
 	return values
 }
@@ -307,6 +307,66 @@ func (r *HitokotoScoreGetResponse) Parse(data []byte) error {
 			l.CreatedAt = string(log.GetStringBytes("created_at"))
 			r.Logs = append(r.Logs, l)
 		}
+
+		updatedAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("updated_at")))
+		if err != nil {
+			updatedAt = time.Time{}
+		}
+		r.UpdatedAt = updatedAt
+
+		createdAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("created_at")))
+		if err != nil {
+			createdAt = time.Time{}
+		}
+		r.CreatedAt = createdAt
+
+	}
+	return nil
+}
+
+type HitokotoReportRequest struct {
+	Token   string
+	UUID    string
+	Comment string
+}
+
+func (r *HitokotoReportRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	values.Add("uuid", r.UUID)
+	values.Add("comment", r.Comment)
+
+	return values
+}
+
+type HitokotoReportResponse struct {
+	SentenceUUID string    `json:"sentence_uuid"`
+	UserID       int       `json:"user_id"`
+	Comment      string    `json:"comment"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	CreatedAt    time.Time `json:"created_at"`
+	ID           int       `json:"id"`
+}
+
+func (r *HitokotoReportResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+
+		var d = list[0]
+
+		r.ID = d.GetInt("id")
+		r.SentenceUUID = string(d.GetStringBytes("sentence_uuid"))
+		r.UserID = d.GetInt("user_id")
+		r.Comment = string(d.GetStringBytes("comment"))
 
 		updatedAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("updated_at")))
 		if err != nil {
