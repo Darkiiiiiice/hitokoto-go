@@ -408,3 +408,47 @@ func TestDoForUserEmailFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserNotificationSettingsSuccess This test case tests the successful get user notification setttings scenario
+func TestDoForUserNotificationSettingsSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsRequest{
+		Token: "dMPAUy3HstBHsuIJhmyzMwAYrlUS47FYlwFe1mBD",
+	}
+	resp := &op.UserNotificationSettingsResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsFailed This test case tests the failed get user notification setttings scenario
+func TestDoForUserNotificationSettingsFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserNotificationSettingsResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}

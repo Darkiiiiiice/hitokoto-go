@@ -213,3 +213,65 @@ type UserEmailResponse struct {
 func (r *UserEmailResponse) Parse(data []byte) error {
 	return nil
 }
+
+type UserNotificationSettingsRequest struct {
+	Token string
+}
+
+func (r *UserNotificationSettingsRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	return values
+}
+
+type UserNotificationSettingsResponse struct {
+	ID     int `json:"id"`
+	UserID int `json:"user_id"`
+
+	EmailNotificationGlobal           int `json:"email_notification_global"`
+	EmailNotificationHitokotoAppended int `json:"email_notification_hitokoto_appended"`
+	EmailNotificationHitokotoReviewed int `json:"email_notification_hitokoto_reviewed"`
+	EmailNotificationPollCreated      int `json:"email_notification_poll_created"`
+	EmailNotificationPollResult       int `json:"email_notification_poll_result"`
+	EmailNotificationPollDailyReport  int `json:"email_notification_poll_daily_report"`
+
+	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+func (r *UserNotificationSettingsResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		d := list[0]
+		r.ID = d.GetInt("id")
+		r.UserID = d.GetInt("user_id")
+		r.EmailNotificationGlobal = d.GetInt("email_notification_global")
+		r.EmailNotificationHitokotoAppended = d.GetInt("email_notification_hitokoto_appended")
+		r.EmailNotificationHitokotoReviewed = d.GetInt("email_notification_hitokoto_reviewed")
+		r.EmailNotificationPollCreated = d.GetInt("email_notification_poll_created")
+		r.EmailNotificationPollResult = d.GetInt("email_notification_poll_result")
+		r.EmailNotificationPollDailyReport = d.GetInt("email_notification_poll_daily_report")
+
+		creatAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("created_at")))
+		if err != nil {
+			creatAt = time.Time{}
+		}
+		r.CreatedAt = creatAt
+
+		updatedAt, err := time.Parse(time.RFC3339Nano, string(d.GetStringBytes("updated_at")))
+		if err != nil {
+			updatedAt = time.Time{}
+		}
+		r.UpdatedAt = updatedAt
+	}
+	return nil
+}
