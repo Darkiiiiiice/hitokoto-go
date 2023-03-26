@@ -991,7 +991,97 @@ func TestDoForHitokotoAppendFailed(t *testing.T) {
 		Token: "xxxxxx",
 	}
 	resp := &op.HitokotoAppendResponse{}
-	err := e.Do(&constants.APIMark, req, resp)
+	err := e.Do(&constants.APIHitokotoAppend, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForHitokotoUUIDSuccess This test case tests the successful get hitokoto scenario
+func TestDoForHitokotoUUIDSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoUUIDRequest{
+		Token: "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		UUID:  "cc5d4eca-b4fb-4da8-aa1c-7f69d8cea9fb",
+	}
+	resp := &op.HitokotoUUIDResponse{}
+	err := e.Do(&constants.APIHitokotoUUID, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoHitokotoUUIDFailed This test case tests the failed get hitokoto scenario
+func TestDoForHitokotoUUIDFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoUUIDRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.HitokotoUUIDResponse{}
+	err := e.Do(&constants.APIHitokotoUUID, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForHitokotoUUIDMarkSuccess This test case tests the successful get hitokoto mark scenario
+func TestDoForHitokotoUUIDMarkSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoUUIDMarkRequest{
+		Token: "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		UUID:  "cc5d4eca-b4fb-4da8-aa1c-7f69d8cea9fb",
+	}
+	resp := &op.HitokotoUUIDMarkResponse{}
+	err := e.Do(&constants.APIHitokotoUUIDMark, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoHitokotoUUIDMarkFailed This test case tests the failed get hitokoto mark scenario
+func TestDoForHitokotoUUIDMarkFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoUUIDMarkRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.HitokotoUUIDMarkResponse{}
+	err := e.Do(&constants.APIHitokotoUUIDMark, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
