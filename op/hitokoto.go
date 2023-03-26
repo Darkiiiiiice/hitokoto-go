@@ -137,3 +137,44 @@ func (r *HitokotoUUIDResponse) Parse(data []byte) error {
 	}
 	return nil
 }
+
+type HitokotoUUIDMarkRequest struct {
+	Token string
+	UUID  string
+}
+
+func (r *HitokotoUUIDMarkRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	values.Add(":uuid", r.UUID)
+
+	return values
+}
+
+type HitokotoUUIDMarkResponse struct {
+	Data []int `json:"data"`
+}
+
+func (r *HitokotoUUIDMarkResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	r.Data = make([]int, 0)
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+
+	for _, d := range list {
+		i, err := d.Int()
+		if err != nil {
+			i = 0
+		}
+
+		r.Data = append(r.Data, i)
+	}
+	return nil
+}
