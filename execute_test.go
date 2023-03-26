@@ -594,3 +594,49 @@ func TestDoForUserHitokotoSummaryFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserHitokotoHistorySuccess This test case tests the successful modify user hitokoto history scenario
+func TestDoForUserHitokotoHistorySuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryRequest{
+		Token:  "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		Offset: 0,
+		Limit:  20,
+	}
+	resp := &op.UserHitokotoHistoryResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistory, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoHistoryFailed This test case tests the failed modify user hitokoto history scenario
+func TestDoForUserHitokotoHistoryFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryRequest{
+		Token: "xxxx",
+	}
+	resp := &op.UserHitokotoHistoryResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistory, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
