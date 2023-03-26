@@ -656,3 +656,71 @@ func (r *UserHitokotoHistoryPendingResponse) Parse(data []byte) error {
 	}
 	return nil
 }
+
+type UserHitokotoHistoryRefuseRequest struct {
+	Token string
+
+	Offset int
+	Limit  int
+}
+
+func (r *UserHitokotoHistoryRefuseRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	values.Add("offset", strconv.Itoa(r.Offset))
+	values.Add("limit", strconv.Itoa(r.Limit))
+
+	return values
+}
+
+type UserHitokotoHistoryRefuseResponse struct {
+	Total      int         `json:"total"`
+	Collection []*Hitokoto `json:"collection"`
+}
+
+func (r *UserHitokotoHistoryRefuseResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		d := list[0]
+		r.Total = d.GetInt("total")
+		r.Collection = make([]*Hitokoto, 0)
+
+		for _, item := range d.GetArray("collection") {
+			var hitokoto = new(Hitokoto)
+			hitokoto.UUID = string(item.GetStringBytes("uuid"))
+			hitokoto.Hitokoto = string(item.GetStringBytes("hitokoto"))
+			hitokoto.Type = string(item.GetStringBytes("type"))
+			hitokoto.From = string(item.GetStringBytes("from"))
+			hitokoto.FromWho = string(item.GetStringBytes("from_who"))
+			hitokoto.Creator = string(item.GetStringBytes("creator"))
+			hitokoto.CreatorUID = item.GetInt("creator_uid")
+			hitokoto.Reviewer = item.GetInt("reviewer")
+			hitokoto.CommitFrom = string(item.GetStringBytes("commit_from"))
+			hitokoto.Status = string(item.GetStringBytes("status"))
+
+			operatedAt, err := time.Parse(time.RFC3339Nano, string(item.GetStringBytes("operated_at")))
+			if err != nil {
+				operatedAt = time.Time{}
+			}
+			hitokoto.OperatedAt = operatedAt
+
+			createdAt, err := strconv.ParseInt(string(item.GetStringBytes("created_at")), 10, 64)
+			if err != nil {
+				createdAt = 0
+			}
+			hitokoto.CreatedAt = time.Unix(createdAt, 0)
+
+			r.Collection = append(r.Collection, hitokoto)
+		}
+	}
+	return nil
+}

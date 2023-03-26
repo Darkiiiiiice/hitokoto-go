@@ -503,7 +503,7 @@ func TestDoForUserNotificationSettingsPutFailed(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoLikeSuccess This test case tests the successful modify user hitokoto like scenario
+// TestDoForUserHitokotoLikeSuccess This test case tests the successful user hitokoto like scenario
 func TestDoForUserHitokotoLikeSuccess(t *testing.T) {
 	e := NewExecutor()
 
@@ -527,7 +527,7 @@ func TestDoForUserHitokotoLikeSuccess(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoLikeFailed This test case tests the failed modify user hitokoto like scenario
+// TestDoForUserHitokotoLikeFailed This test case tests the failed user hitokoto like scenario
 func TestDoForUserHitokotoLikeFailed(t *testing.T) {
 	e := NewExecutor()
 
@@ -551,7 +551,7 @@ func TestDoForUserHitokotoLikeFailed(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoSummarySuccess This test case tests the successful modify user hitokoto summary scenario
+// TestDoForUserHitokotoSummarySuccess This test case tests the successful user hitokoto summary scenario
 func TestDoForUserHitokotoSummarySuccess(t *testing.T) {
 	e := NewExecutor()
 
@@ -573,7 +573,7 @@ func TestDoForUserHitokotoSummarySuccess(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoSummaryFailed This test case tests the failed modify user hitokoto summary scenario
+// TestDoForUserHitokotoSummaryFailed This test case tests the failed user hitokoto summary scenario
 func TestDoForUserHitokotoSummaryFailed(t *testing.T) {
 	e := NewExecutor()
 
@@ -595,7 +595,7 @@ func TestDoForUserHitokotoSummaryFailed(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoHistorySuccess This test case tests the successful modify user hitokoto history scenario
+// TestDoForUserHitokotoHistorySuccess This test case tests the successful user hitokoto history scenario
 func TestDoForUserHitokotoHistorySuccess(t *testing.T) {
 	e := NewExecutor()
 
@@ -619,7 +619,7 @@ func TestDoForUserHitokotoHistorySuccess(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoHistoryFailed This test case tests the failed modify user hitokoto history scenario
+// TestDoForUserHitokotoHistoryFailed This test case tests the failed user hitokoto history scenario
 func TestDoForUserHitokotoHistoryFailed(t *testing.T) {
 	e := NewExecutor()
 
@@ -641,7 +641,7 @@ func TestDoForUserHitokotoHistoryFailed(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoHistoryPendingSuccess This test case tests the successful modify user hitokoto history pending scenario
+// TestDoForUserHitokotoHistoryPendingSuccess This test case tests the successful user hitokoto history pending scenario
 func TestDoForUserHitokotoHistoryPendingSuccess(t *testing.T) {
 	e := NewExecutor()
 
@@ -665,7 +665,7 @@ func TestDoForUserHitokotoHistoryPendingSuccess(t *testing.T) {
 
 }
 
-// TestDoForUserHitokotoHistoryPendingFailed This test case tests the failed modify user hitokoto history scenario
+// TestDoForUserHitokotoHistoryPendingFailed This test case tests the failed user hitokoto history scenario
 func TestDoForUserHitokotoHistoryPendingFailed(t *testing.T) {
 	e := NewExecutor()
 
@@ -674,6 +674,52 @@ func TestDoForUserHitokotoHistoryPendingFailed(t *testing.T) {
 	}
 	resp := &op.UserHitokotoHistoryPendingResponse{}
 	err := e.Do(&constants.APIUserHitokotoHistoryPending, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoHistoryRefuseSuccess This test case tests the successful user hitokoto history refuse scenario
+func TestDoForUserHitokotoHistoryRefuseSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryRefuseRequest{
+		Token:  "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		Offset: 0,
+		Limit:  20,
+	}
+	resp := &op.UserHitokotoHistoryRefuseResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistoryRefuse, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoHistoryRefuseFailed This test case tests the failed user hitokoto history refuse scenario
+func TestDoForUserHitokotoHistoryRefuseFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoHistoryRefuseRequest{
+		Token: "xxxx",
+	}
+	resp := &op.UserHitokotoHistoryRefuseResponse{}
+	err := e.Do(&constants.APIUserHitokotoHistoryRefuse, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
