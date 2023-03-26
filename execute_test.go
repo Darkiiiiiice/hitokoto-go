@@ -409,8 +409,8 @@ func TestDoForUserEmailFailed(t *testing.T) {
 
 }
 
-// TestDoForUserNotificationSettingsSuccess This test case tests the successful get user notification setttings scenario
-func TestDoForUserNotificationSettingsSuccess(t *testing.T) {
+// TestDoForUserNotificationSettingsGetSuccess This test case tests the successful get user notification setttings scenario
+func TestDoForUserNotificationSettingsGetSuccess(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.UserNotificationSettingsGetRequest{
@@ -431,8 +431,8 @@ func TestDoForUserNotificationSettingsSuccess(t *testing.T) {
 
 }
 
-// TestDoForUserNotificationSettingsFailed This test case tests the failed get user notification setttings scenario
-func TestDoForUserNotificationSettingsFailed(t *testing.T) {
+// TestDoForUserNotificationSettingsGetFailed This test case tests the failed get user notification setttings scenario
+func TestDoForUserNotificationSettingsGetFailed(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.UserNotificationSettingsGetRequest{
@@ -440,6 +440,56 @@ func TestDoForUserNotificationSettingsFailed(t *testing.T) {
 	}
 	resp := &op.UserNotificationSettingsGetResponse{}
 	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsPutSuccess This test case tests the successful modify user notification setttings scenario
+func TestDoForUserNotificationSettingsPutSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsPutRequest{
+		Token:                 "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		EmailGlobal:           true,
+		EmailHitokotoAppended: true,
+		EmailHitokotoReviewed: true,
+		EmailPollCreated:      true,
+		EmailPollResult:       false,
+		EmailPollReportDaily:  true,
+	}
+	resp := &op.UserNotificationSettingsPutResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsPut, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserNotificationSettingsPutFailed This test case tests the failed modify user notification setttings scenario
+func TestDoForUserNotificationSettingsPutFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserNotificationSettingsPutRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserNotificationSettingsPutResponse{}
+	err := e.Do(&constants.APIUserNotificationSettingsPut, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
