@@ -866,3 +866,49 @@ func TestDoForLikePostFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForLikeCancelSuccess This test case tests the successful like cancel scenario
+func TestDoForLikeCancelSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikeCancelRequest{
+		Token:        "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+		SentenceUuid: "cc5d4eca-b4fb-4da8-aa1c-7f69d8cea9fb",
+	}
+	resp := &op.LikeCancelResponse{}
+	err := e.Do(&constants.APILikeCancel, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForLikeCancelFailed This test case tests the failed like cancel scenario
+func TestDoForLikeCancelFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikeCancelRequest{
+		Token:        "xxxxxx",
+		SentenceUuid: "xxxxxx",
+	}
+	resp := &op.LikeCancelResponse{}
+	err := e.Do(&constants.APILikeCancel, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}

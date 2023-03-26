@@ -94,3 +94,24 @@ func (r *LikePostResponse) Parse(data []byte) error {
 	}
 	return nil
 }
+
+type LikeCancelRequest struct {
+	Token        string
+	SentenceUuid string
+}
+
+func (r *LikeCancelRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("sentence_uuid", r.SentenceUuid)
+	values.Add("token", r.Token)
+
+	return values
+}
+
+type LikeCancelResponse struct {
+}
+
+func (r *LikeCancelResponse) Parse(data []byte) error {
+	return nil
+}

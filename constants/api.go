@@ -47,7 +47,7 @@ var (
 	}
 	APILikeCancel = API{
 		Api:         "/like/cancel",
-		Method:      http.MethodGet,
+		Method:      http.MethodPost,
 		ContentType: "application/json",
 		PathVar:     "",
 		Desc:        "撤回已经发出的喜爱",
