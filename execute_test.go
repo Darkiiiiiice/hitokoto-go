@@ -413,10 +413,10 @@ func TestDoForUserEmailFailed(t *testing.T) {
 func TestDoForUserNotificationSettingsSuccess(t *testing.T) {
 	e := NewExecutor()
 
-	req := &op.UserNotificationSettingsRequest{
+	req := &op.UserNotificationSettingsGetRequest{
 		Token: "dMPAUy3HstBHsuIJhmyzMwAYrlUS47FYlwFe1mBD",
 	}
-	resp := &op.UserNotificationSettingsResponse{}
+	resp := &op.UserNotificationSettingsGetResponse{}
 	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
@@ -435,10 +435,10 @@ func TestDoForUserNotificationSettingsSuccess(t *testing.T) {
 func TestDoForUserNotificationSettingsFailed(t *testing.T) {
 	e := NewExecutor()
 
-	req := &op.UserNotificationSettingsRequest{
+	req := &op.UserNotificationSettingsGetRequest{
 		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
 	}
-	resp := &op.UserNotificationSettingsResponse{}
+	resp := &op.UserNotificationSettingsGetResponse{}
 	err := e.Do(&constants.APIUserNotificationSettingsGet, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)

@@ -214,18 +214,18 @@ func (r *UserEmailResponse) Parse(data []byte) error {
 	return nil
 }
 
-type UserNotificationSettingsRequest struct {
+type UserNotificationSettingsGetRequest struct {
 	Token string
 }
 
-func (r *UserNotificationSettingsRequest) FormatToValues() url.Values {
+func (r *UserNotificationSettingsGetRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("token", r.Token)
 	return values
 }
 
-type UserNotificationSettingsResponse struct {
+type UserNotificationSettingsGetResponse struct {
 	ID     int `json:"id"`
 	UserID int `json:"user_id"`
 
@@ -240,7 +240,7 @@ type UserNotificationSettingsResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func (r *UserNotificationSettingsResponse) Parse(data []byte) error {
+func (r *UserNotificationSettingsGetResponse) Parse(data []byte) error {
 	v, err := fastjson.ParseBytes(data)
 	if err != nil {
 		return err
