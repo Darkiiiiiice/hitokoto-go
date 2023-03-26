@@ -1,4 +1,4 @@
-module github.com/mariomang/hitokoto
+module github.com/mariomang/hitokoto-go
 
 go 1.20
 
