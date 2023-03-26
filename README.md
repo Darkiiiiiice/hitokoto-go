@@ -23,7 +23,7 @@ Hitokoto是一个开源的短句子分享平台，旨在让用户分享和发现
 使用Hitokoto GO SDK前，需要先安装golang。安装完成后，使用go get工具可以轻松地安装Hitokoto GO SDK：
 
 ``` bash
-go get github.com/MarioMang/hitokoto@v1.0.1
+go get github.com/MarioMang/hitokoto@v1.0.2
 ```
 
 ## 使用方法
@@ -33,7 +33,7 @@ go get github.com/MarioMang/hitokoto@v1.0.1
 使用 go get 或者在 go.mod 中手动添加
 
 ``` text
- required github.com/mariomang/hitokoto-go v1.0.1
+ required github.com/mariomang/hitokoto-go v1.0.2
 ```
 
 ### 初始化
