@@ -502,3 +502,51 @@ func TestDoForUserNotificationSettingsPutFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserHitokotoLikeSuccess This test case tests the successful modify user hitokoto like scenario
+func TestDoForUserHitokotoLikeSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoLikeRequest{
+		Token:  "dMPAUy3HstBHsuIJhmyzMwAYrlUS47FYlwFe1mBD",
+		Offset: 0,
+		Limit:  20,
+	}
+	resp := &op.UserHitokotoLikeResponse{}
+	err := e.Do(&constants.APIUserHitokotoLike, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoLikeFailed This test case tests the failed modify user hitokoto like scenario
+func TestDoForUserHitokotoLikeFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoLikeRequest{
+		Token:  "xxxxxx",
+		Offset: 0,
+		Limit:  10,
+	}
+	resp := &op.UserHitokotoLikeResponse{}
+	err := e.Do(&constants.APIUserHitokotoLike, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
