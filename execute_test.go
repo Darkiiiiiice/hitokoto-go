@@ -1232,3 +1232,20 @@ func TestDoForHitokotoReportFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForHitokotoSuccess This test case tests the successful get hitokoto scenario
+func TestDoForHitokotoSuccess(t *testing.T) {
+	e := NewExecutor().WithGlobalAPI()
+
+	req := &op.HitokotoRequest{
+		Type:    []constants.HitokotoType{constants.Animation},
+		Encode:  constants.EncodeJson,
+		Charset: constants.CharsetUTF8,
+	}
+	resp := &op.HitokotoResponse{}
+	err := e.Do(&constants.APIHitokoto, req, resp)
+	if err != nil {
+		t.Errorf("Error executing request: %v", err)
+	}
+
+}

@@ -5,8 +5,96 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/mariomang/hitokoto-go/constants"
 	"github.com/valyala/fastjson"
 )
+
+type HitokotoRequest struct {
+	API       string
+	Type      []constants.HitokotoType
+	Encode    constants.HitokotoEncode
+	Charset   constants.HitokotoCharset
+	Callback  string
+	Select    string
+	MinLength int
+	MaxLength int
+}
+
+func (r *HitokotoRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	for _, t := range r.Type {
+		values.Add("c", string(t))
+	}
+	var encode = string(r.Encode)
+	if encode != "" {
+		values.Add("encode", encode)
+	}
+	var charset = string(r.Charset)
+	if charset != "" {
+		values.Add("charset", charset)
+	}
+	var callback = r.Callback
+	if callback != "" {
+		values.Add("callback", callback)
+	}
+	var selectStr = r.Select
+	if selectStr != "" {
+		values.Add("select", selectStr)
+	}
+	var minLength = r.MinLength
+	if minLength > 0 {
+		values.Add("minlength", strconv.Itoa(minLength))
+	}
+	var maxLength = r.MaxLength
+	if maxLength > 0 {
+		values.Add("maxlength", strconv.Itoa(maxLength))
+	}
+
+	return values
+}
+
+type HitokotoResponse struct {
+	ID         int    `json:"id"`
+	Hitokoto   string `json:"hitokoto"`
+	Type       string `json:"type"`
+	From       string `json:"from"`
+	FromWho    string `json:"from_who"`
+	Creator    string `json:"creator"`
+	CreatorUID int    `json:"creator_uid"`
+	Reviewer   int    `json:"reviewer"`
+	UUID       string `json:"uuid"`
+	CommitFrom string `json:"commit_from"`
+	Length     int    `json:"length"`
+
+	CreatedAt time.Time `json:"created_at"`
+}
+
+func (r *HitokotoResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	r.ID = v.GetInt("id")
+	r.UUID = string(v.GetStringBytes("uuid"))
+	r.Hitokoto = string(v.GetStringBytes("hitokoto"))
+	r.Type = string(v.GetStringBytes("type"))
+	r.From = string(v.GetStringBytes("from"))
+	r.FromWho = string(v.GetStringBytes("from_who"))
+	r.Creator = string(v.GetStringBytes("creator"))
+	r.CreatorUID = v.GetInt("creator_uid")
+	r.CommitFrom = string(v.GetStringBytes("commit_from"))
+	r.Length = v.GetInt("length")
+
+	createdAt, err := strconv.ParseInt(string(v.GetStringBytes("created_at")), 10, 64)
+	if err != nil {
+		createdAt = 0
+	}
+	r.CreatedAt = time.Unix(createdAt, 0)
+
+	return nil
+}
 
 type HitokotoAppendRequest struct {
 	Token    string

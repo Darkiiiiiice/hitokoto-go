@@ -14,6 +14,9 @@ type Executor struct {
 	APIGateway string
 	// UserAgent is the user agent used to execute the command
 	UserAgent string
+
+	// GlobalAPI is used to set the global API
+	GlobalAPI bool
 }
 
 // NewExecutor initializes an Executor with the default APIGateway URL.
@@ -30,15 +33,22 @@ func (e *Executor) WithUserAgent(userAgent string) *Executor {
 	return e
 }
 
+func (e *Executor) WithGlobalAPI() *Executor {
+	e.GlobalAPI = true
+	return e
+}
+
 // Do executes the API request and response
 func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error) {
 
+	var requestSentence = false
+	if api.Api == "" {
+		requestSentence = true
+	}
 	// Create a Resty Client
 	client := resty.New()
 
 	var values = req.FormatToValues()
-
-	var path = e.APIGateway + api.Api
 
 	var userAgent = constants.UserAgent
 	if e.UserAgent != "" {
@@ -50,6 +60,17 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 		SetHeader("Content-Type", api.ContentType).
 		SetHeader("Host", constants.Host).
 		SetHeader("User-Agent", userAgent)
+
+	var path = e.APIGateway + api.Api
+	if requestSentence {
+		if e.GlobalAPI {
+			path = constants.Scheme + constants.SentenceGlobalAPI
+			request = request.SetHeader("Host", constants.SentenceGlobalAPI)
+		} else {
+			path = constants.Scheme + constants.SentenceAbroadAPI
+			request = request.SetHeader("Host", constants.SentenceAbroadAPI)
+		}
+	}
 
 	if api.PathVar != "" {
 		request = request.SetPathParam("uuid", values.Get("uuid"))
@@ -76,6 +97,9 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 	default:
 	}
 
+	if requestSentence {
+		return resp.Parse(body)
+	}
 	v, err := fastjson.ParseBytes(body)
 	if err != nil {
 		return err
