@@ -179,14 +179,14 @@ var (
 		Desc:        "查看指定一言的审核标记（通过 UUID）",
 	}
 	APIHitokotoScorePost = API{
-		Api:         "/hitokoto/score",
+		Api:         "/hitokoto/:uuid/score",
 		Method:      http.MethodPost,
 		ContentType: "application/json",
 		PathVar:     ":uuid",
 		Desc:        "为已上线的句子评分，返回评分相关信息",
 	}
 	APIHitokotoScoreGet = API{
-		Api:         "/hitokoto/score",
+		Api:         "/hitokoto/:uuid/score",
 		Method:      http.MethodGet,
 		ContentType: "application/json",
 		PathVar:     ":uuid",

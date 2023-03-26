@@ -178,3 +178,60 @@ func (r *HitokotoUUIDMarkResponse) Parse(data []byte) error {
 	}
 	return nil
 }
+
+type SentenceScore struct {
+	Total        int `json:"total"`
+	Participants int `json:"participants"`
+	Average      int `json:"average"`
+}
+
+type HitokotoScorePostRequest struct {
+	Token   string
+	UUID    string
+	Score   int
+	Comment string
+}
+
+func (r *HitokotoScorePostRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	values.Add(":uuid", r.UUID)
+	values.Add("score", strconv.Itoa(r.Score))
+	values.Add("comment", r.Comment)
+
+	return values
+}
+
+type HitokotoScorePostResponse struct {
+	Score         string        `json:"score"`
+	Comment       string        `json:"comment"`
+	SentenceUUID  string        `json:"sentence_uuid"`
+	SentenceScore SentenceScore `json:"sentence_score"`
+}
+
+func (r *HitokotoScorePostResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+
+		var d = list[0]
+
+		r.Score = string(d.GetStringBytes("score"))
+		r.Comment = string(d.GetStringBytes("comment"))
+		r.SentenceUUID = string(d.GetStringBytes("sentence_uuid"))
+		var sentenceScore = d.Get("sentence_score")
+		r.SentenceScore.Average = sentenceScore.GetInt("average")
+		r.SentenceScore.Participants = sentenceScore.GetInt("participants")
+		r.SentenceScore.Total = sentenceScore.GetInt("total")
+
+	}
+	return nil
+}
