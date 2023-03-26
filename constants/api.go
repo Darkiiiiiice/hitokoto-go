@@ -165,38 +165,38 @@ var (
 		Desc:        "添加一言，返回审核队列中新句子的信息",
 	}
 	APIHitokotoUUID = API{
-		Api:         "/hitokoto/:uuid",
+		Api:         "/hitokoto/{uuid}",
 		Method:      http.MethodGet,
 		ContentType: "application/json",
-		PathVar:     ":uuid",
+		PathVar:     "uuid",
 		Desc:        "查看指定一言的信息（通过 UUID）",
 	}
 	APIHitokotoUUIDMark = API{
-		Api:         "/hitokoto/:uuid/mark",
+		Api:         "/hitokoto/{uuid}/mark",
 		Method:      http.MethodGet,
 		ContentType: "application/json",
-		PathVar:     ":uuid",
+		PathVar:     "uuid",
 		Desc:        "查看指定一言的审核标记（通过 UUID）",
 	}
 	APIHitokotoScorePost = API{
-		Api:         "/hitokoto/score",
+		Api:         "/hitokoto/{uuid}/score",
 		Method:      http.MethodPost,
 		ContentType: "application/json",
-		PathVar:     ":uuid",
+		PathVar:     "uuid",
 		Desc:        "为已上线的句子评分，返回评分相关信息",
 	}
 	APIHitokotoScoreGet = API{
-		Api:         "/hitokoto/score",
+		Api:         "/hitokoto/{uuid}/score",
 		Method:      http.MethodGet,
 		ContentType: "application/json",
-		PathVar:     ":uuid",
+		PathVar:     "uuid",
 		Desc:        "获得句子的评分信息",
 	}
 	APIHitokotoReport = API{
-		Api:         "/hitokoto/report",
+		Api:         "/hitokoto/{uuid}/report",
 		Method:      http.MethodPost,
 		ContentType: "application/json",
-		PathVar:     ":uuid",
+		PathVar:     "uuid",
 		Desc:        "举报一言存在问题，返回提交举报的相关信息",
 	}
 )

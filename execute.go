@@ -2,7 +2,6 @@ package hitokoto
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mariomang/hitokoto/constants"
@@ -33,14 +32,9 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 	var values = req.FormatToValues()
 
 	var path = e.APIGateway + api.Api
-	if api.PathVar != "" {
-		var pathVar = values.Get(api.PathVar)
-		values.Del(api.PathVar)
-		path = strings.ReplaceAll(path, api.PathVar, pathVar)
-	}
 
 	var userAgent = constants.UserAgent
-	if userAgent != "" {
+	if e.UserAgent != "" {
 		userAgent = e.UserAgent
 	}
 
@@ -49,6 +43,11 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 		SetHeader("Content-Type", api.ContentType).
 		SetHeader("Host", constants.Host).
 		SetHeader("User-Agent", userAgent)
+
+	if api.PathVar != "" {
+		request = request.SetPathParam("uuid", values.Get("uuid"))
+		values.Del(api.PathVar)
+	}
 
 	var body []byte
 	switch api.Method {
