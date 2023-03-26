@@ -1141,3 +1141,48 @@ func TestDoForHitokotoScorePostFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForHitokotoScoreGetSuccess This test case tests the successful get hitokoto score scenario
+func TestDoForHitokotoScoreGetSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoScoreGetRequest{
+		Token:   "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		UUID:    "0348752c-6bb6-43c2-8a6d-a4c780e04767",
+	}
+	resp := &op.HitokotoScoreGetResponse{}
+	err := e.Do(&constants.APIHitokotoScoreGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoHitokotoScoreGetFailed This test case tests the failed get hitokoto score scenario
+func TestDoForHitokotoScoreGetFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoScoreGetRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.HitokotoScoreGetResponse{}
+	err := e.Do(&constants.APIHitokotoScoreGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
