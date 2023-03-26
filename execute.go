@@ -4,26 +4,33 @@ import (
 	"net/http"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mariomang/hitokoto/constants"
+	"github.com/mariomang/hitokoto-go/constants"
 	"github.com/valyala/fastjson"
 )
 
+// Executor is used to execute commands on the API gateway
 type Executor struct {
+	// APIGateway is the URL of the API gateway
 	APIGateway string
-	UserAgent  string
+	// UserAgent is the user agent used to execute the command
+	UserAgent string
 }
 
+// NewExecutor initializes an Executor with the default APIGateway URL.
 func NewExecutor() *Executor {
 	return &Executor{
 		APIGateway: constants.Scheme + constants.APIGatewayV1,
 	}
 }
 
+// WithUserAgent sets the User-Agent header to the given value. If the
+// value is empty, the User-Agent header will not be sent.
 func (e *Executor) WithUserAgent(userAgent string) *Executor {
 	e.UserAgent = userAgent
 	return e
 }
 
+// Do executes the API request and response
 func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error) {
 
 	// Create a Resty Client
@@ -88,6 +95,7 @@ func (e *Executor) Do(api *constants.API, req Request, resp Response) (err error
 	return nil
 }
 
+// get sends a GET request to path, and returns the response body.
 func (e *Executor) get(request *resty.Request, path string) ([]byte, error) {
 
 	resp, err := request.Get(path)
@@ -97,6 +105,7 @@ func (e *Executor) get(request *resty.Request, path string) ([]byte, error) {
 	return resp.Body(), nil
 }
 
+// post sends a POST request to path, and returns the response body.
 func (e *Executor) post(request *resty.Request, path string) ([]byte, error) {
 
 	resp, err := request.Post(path)
@@ -106,6 +115,7 @@ func (e *Executor) post(request *resty.Request, path string) ([]byte, error) {
 	return resp.Body(), nil
 }
 
+// put sends a PUT request to path, and returns the response body.
 func (e *Executor) put(request *resty.Request, path string) ([]byte, error) {
 
 	resp, err := request.Put(path)

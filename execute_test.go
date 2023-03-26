@@ -3,8 +3,8 @@ package hitokoto
 import (
 	"testing"
 
-	"github.com/mariomang/hitokoto/constants"
-	"github.com/mariomang/hitokoto/op"
+	"github.com/mariomang/hitokoto-go/constants"
+	"github.com/mariomang/hitokoto-go/op"
 )
 
 // TestDoForLoginSuccess This test case tests the successful login scenario
