@@ -7,6 +7,9 @@ const (
 	Host         = "hitokoto.cn"
 	APIGatewayV1 = Host + "/api/restful/v1" // APIGatewayV1 is the API gateway of v1
 	UserAgent    = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15"
+
+	SentenceGlobalAPI = "v1.hitokoto.cn"
+	SentenceAbroadAPI = "international.v1.hitokoto.cn"
 )
 
 var (
@@ -198,6 +201,13 @@ var (
 		ContentType: "application/json",
 		PathVar:     "uuid",
 		Desc:        "举报一言存在问题，返回提交举报的相关信息",
+	}
+	APIHitokoto = API{
+		Api:         "",
+		Method:      http.MethodGet,
+		ContentType: "application/json",
+		PathVar:     "",
+		Desc:        "语句接口",
 	}
 )
 
