@@ -151,3 +151,21 @@ func (r *UserTokenRefreshResponse) Parse(data []byte) error {
 
 	return nil
 }
+
+type UserEmailVerifyRequest struct {
+	Token string
+}
+
+func (r *UserEmailVerifyRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("token", r.Token)
+	return values
+}
+
+type UserEmailVerifyResponse struct {
+}
+
+func (r *UserEmailVerifyResponse) Parse(data []byte) error {
+	return nil
+}

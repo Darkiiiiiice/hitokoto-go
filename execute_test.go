@@ -268,3 +268,47 @@ func TestDoForUserTokenRefreshFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForUserEmailVerifySuccess This test case tests the successful verify user email scenario
+func TestDoForUserEmailVerifySuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailVerifyRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserEmailVerifyResponse{}
+	err := e.Do(&constants.APIUserEmailVerify, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserEmailVerifyFailed This test case tests the failed refresh user token scenario
+func TestDoForUserEmailVerifyFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserEmailVerifyRequest{
+		Token: "xxxxxxx",
+	}
+	resp := &op.UserEmailVerifyResponse{}
+	err := e.Do(&constants.APIUserEmailVerify, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
