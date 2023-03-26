@@ -956,3 +956,51 @@ func TestDoForMarkFailed(t *testing.T) {
 	}
 
 }
+
+// TestDoForHitokotoAppendSuccess This test case tests the successful hitokoto append scenario
+func TestDoForHitokotoAppendSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoAppendRequest{
+		Token:    "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		From:     "火影忍者",
+		FromWho:  "漩涡鸣人",
+		Hitokoto: "你没有受伤吧，胆小鬼。",
+		Type:     "a",
+	}
+	resp := &op.HitokotoAppendResponse{}
+	err := e.Do(&constants.APIHitokotoAppend, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoHitokotoAppendFailed This test case tests the failed hitokoto append scenario
+func TestDoForHitokotoAppendFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.HitokotoAppendRequest{
+		Token: "xxxxxx",
+	}
+	resp := &op.HitokotoAppendResponse{}
+	err := e.Do(&constants.APIMark, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
