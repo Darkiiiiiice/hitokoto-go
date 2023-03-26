@@ -962,7 +962,7 @@ func TestDoForHitokotoAppendSuccess(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.HitokotoAppendRequest{
-		Token:    "rnqgCVVs1RG7ucCwmyn2BiDwTfj2tVrOj1J7KFuW",
+		Token:    "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
 		From:     "火影忍者",
 		FromWho:  "漩涡鸣人",
 		Hitokoto: "你没有受伤吧，胆小鬼。",
