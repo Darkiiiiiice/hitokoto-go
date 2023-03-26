@@ -508,7 +508,7 @@ func TestDoForUserHitokotoLikeSuccess(t *testing.T) {
 	e := NewExecutor()
 
 	req := &op.UserHitokotoLikeRequest{
-		Token:  "dMPAUy3HstBHsuIJhmyzMwAYrlUS47FYlwFe1mBD",
+		Token:  "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
 		Offset: 0,
 		Limit:  20,
 	}
@@ -538,6 +538,50 @@ func TestDoForUserHitokotoLikeFailed(t *testing.T) {
 	}
 	resp := &op.UserHitokotoLikeResponse{}
 	err := e.Do(&constants.APIUserHitokotoLike, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoSummarySuccess This test case tests the successful modify user hitokoto summary scenario
+func TestDoForUserHitokotoSummarySuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoSummaryRequest{
+		Token: "XBufVkcA3Ti0sfB8rJlVe0iQ7cpjxDvtje4zJM62",
+	}
+	resp := &op.UserHitokotoSummaryResponse{}
+	err := e.Do(&constants.APIUserHitokotoSummary, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForUserHitokotoSummaryFailed This test case tests the failed modify user hitokoto summary scenario
+func TestDoForUserHitokotoSummaryFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.UserHitokotoSummaryRequest{
+		Token: "xxxx",
+	}
+	resp := &op.UserHitokotoSummaryResponse{}
+	err := e.Do(&constants.APIUserHitokotoSummary, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
