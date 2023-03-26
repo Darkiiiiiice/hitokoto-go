@@ -12,11 +12,11 @@ type Set struct {
 	CreatedTime time.Time `json:"created_time"`
 }
 
-type LikeRequest struct {
+type LikeGetRequest struct {
 	SentenceUuid string
 }
 
-func (r *LikeRequest) FormatToValues() url.Values {
+func (r *LikeGetRequest) FormatToValues() url.Values {
 	var values = url.Values{}
 
 	values.Add("sentence_uuid", r.SentenceUuid)
@@ -24,12 +24,12 @@ func (r *LikeRequest) FormatToValues() url.Values {
 	return values
 }
 
-type LikeResponse struct {
+type LikeGetResponse struct {
 	Sets  []*Set `json:"sets"`
 	Total int    `json:"total"`
 }
 
-func (r *LikeResponse) Parse(data []byte) error {
+func (r *LikeGetResponse) Parse(data []byte) error {
 	v, err := fastjson.ParseBytes(data)
 	if err != nil {
 		return err
@@ -56,6 +56,41 @@ func (r *LikeResponse) Parse(data []byte) error {
 
 			r.Sets = append(r.Sets, hitokoto)
 		}
+	}
+	return nil
+}
+
+type LikePostRequest struct {
+	SentenceUuid string
+}
+
+func (r *LikePostRequest) FormatToValues() url.Values {
+	var values = url.Values{}
+
+	values.Add("sentence_uuid", r.SentenceUuid)
+
+	return values
+}
+
+type LikePostResponse struct {
+	IP     string `json:"ip"`
+	UserId int    `json:"user_id"`
+}
+
+func (r *LikePostResponse) Parse(data []byte) error {
+	v, err := fastjson.ParseBytes(data)
+	if err != nil {
+		return err
+	}
+
+	list, err := v.Array()
+	if err != nil {
+		return err
+	}
+	if len(list) > 0 {
+		d := list[0]
+		r.IP = string(d.GetStringBytes("ip"))
+		r.UserId = d.GetInt("user_id")
 	}
 	return nil
 }

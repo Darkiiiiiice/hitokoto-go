@@ -779,14 +779,14 @@ func TestDoForUserHitokotoHistoryAcceptFailed(t *testing.T) {
 
 }
 
-// TestDoForLikeSuccess This test case tests the successful like scenario
-func TestDoForLikeSuccess(t *testing.T) {
+// TestDoForLikeGetSuccess This test case tests the successful get like scenario
+func TestDoForLikeGetSuccess(t *testing.T) {
 	e := NewExecutor()
 
-	req := &op.LikeRequest{
+	req := &op.LikeGetRequest{
 		SentenceUuid: "34662c58-8eba-4757-a637-c7c11e9f537e",
 	}
-	resp := &op.LikeResponse{}
+	resp := &op.LikeGetResponse{}
 	err := e.Do(&constants.APILikeGet, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
@@ -801,15 +801,59 @@ func TestDoForLikeSuccess(t *testing.T) {
 
 }
 
-// TestDoForLikeFailed This test case tests the failed like scenario
-func TestDoForLikeFailed(t *testing.T) {
+// TestDoForLikeGetFailed This test case tests the failed get like scenario
+func TestDoForLikeGetFailed(t *testing.T) {
 	e := NewExecutor()
 
-	req := &op.LikeRequest{
+	req := &op.LikeGetRequest{
 		SentenceUuid: "xxxxxx",
 	}
-	resp := &op.LikeResponse{}
+	resp := &op.LikeGetResponse{}
 	err := e.Do(&constants.APILikeGet, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status == 200 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForLikePostSuccess This test case tests the successful like post scenario
+func TestDoForLikePostSuccess(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikePostRequest{
+		SentenceUuid: "cc5d4eca-b4fb-4da8-aa1c-7f69d8cea9fb",
+	}
+	resp := &op.LikePostResponse{}
+	err := e.Do(&constants.APILikePost, req, resp)
+	if err != nil {
+		e, ok := err.(*HitokotoError)
+		if !ok {
+			t.Errorf("Error executing request: %v", err)
+		}
+
+		if e.Status != 200 && e.Status != 401 && e.Status != -1 {
+			t.Errorf("Status is not correct: %v", e.Status)
+		}
+	}
+
+}
+
+// TestDoForLikePostFailed This test case tests the failed like post scenario
+func TestDoForLikePostFailed(t *testing.T) {
+	e := NewExecutor()
+
+	req := &op.LikePostRequest{
+		SentenceUuid: "xxxxxx",
+	}
+	resp := &op.LikePostResponse{}
+	err := e.Do(&constants.APILikePost, req, resp)
 	if err != nil {
 		e, ok := err.(*HitokotoError)
 		if !ok {
