@@ -2,6 +2,11 @@
 
 [官网](https://hitokoto.cn) | [开发中心](https://developer.hitokoto.cn)
 
+[![godoc](https://pkg.go.dev/badge/github.com/mariomang/hitokoto-go?status.svg)](https://pkg.go.dev/github.com/mariomang/hitokoto-go)
+[![goproxy.cn](https://goproxy.cn/stats/github.com/mariomang/hitokoto-go/badges/download-count.svg)](https://goproxy.cn/stats/github.com/mariomang/hitokoto-go)
+[![goreportcard.com](https://goreportcard.com/badge/github.com/mariomang/hitokoto-go )](https://goreportcard.com/report/github.com/mariomang/hitokoto-go)
+[![deps.dev](https://img.shields.io/badge/deps-go-red.svg)](https://deps.dev/go/github.com%2Fmariomang%2Fhitokoto-go)
+
 本项目使用 [Hitokoto](https://hitokoto.cn)(一言网) 官方文档中的API，对官方文档中的API使用Golang语言封装的SDK。所有API均可在官方开发者文档中查询，不包含未开放API
 
 ## 本项目
